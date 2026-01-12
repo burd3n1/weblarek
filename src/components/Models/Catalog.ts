@@ -1,11 +1,11 @@
 import { IProduct } from "../../types";
 
 export class Catalog {
-    private _items: IProduct[] = [];
+    private items: IProduct[] = [];
     private _preview: IProduct | null = null;
 
     getItems(): IProduct[] {
-        return this._items;
+        return this.items;
     }
 
     setPreview(product:  IProduct | null) {
@@ -17,6 +17,6 @@ export class Catalog {
     }
 
     setItems(items: IProduct[]) {
-        this._items = items;
+        this.items = items;
     }
 }

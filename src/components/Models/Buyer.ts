@@ -1,7 +1,7 @@
 import { IBuyer } from "../../types";
 
 export class Buyer {
-    private _payment:  'card' | 'cash' | 'null' = 'null';
+    private _payment:  'card' | 'cash' | null = null;
     private _email: string = '';
     private _phone: string = '';
     private _address: string = '';
@@ -46,5 +46,12 @@ export class Buyer {
         }
 
         return errors;
+    }
+
+    clear() {
+        this._payment = null;
+        this._address = '';
+        this._email = '';
+        this._phone = '';
     }
 }

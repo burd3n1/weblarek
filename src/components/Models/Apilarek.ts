@@ -3,7 +3,7 @@ import { IOrder, IApi , IProductResponse , IOrderResult, IProduct } from '../../
 export class Apilarek {
     constructor(private readonly api: IApi) {}
 
-    async getProducts(): Promise<IProduct[]> {
+    async getProducts(): Promise<IProduct[]>{
         const response: IProductResponse = await this.api.get('/product/');
         return response.items;
     }

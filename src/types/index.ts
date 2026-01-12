@@ -15,22 +15,20 @@ export interface IProduct {
 }
 
 export interface IBuyer {
-    payment: 'card' | 'cash' | 'null';
+    payment: 'card' | 'cash' | null;
     email: string;
     phone: string;
     address: string;
 }
 
 export interface IProductResponse {
+    total: number;
     items: IProduct[];
 }
 
-export interface IOrder {
-    payment: 'card' | 'cash';
-    email: string;
-    phone: string;
+export interface IOrder extends IBuyer {
     total: number;
-    items: string[]; // массив id товаров
+    items: string[]
 }
 
 export interface IOrderResult {
