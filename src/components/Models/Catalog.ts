@@ -8,6 +8,10 @@ export class Catalog {
         return this.items;
     }
 
+    getItemid(id: string) : IProduct | null {
+        return this.items.find(item => item.id === id) || null;
+    }
+
     setPreview(product:  IProduct | null) {
         this._preview = product;
     }

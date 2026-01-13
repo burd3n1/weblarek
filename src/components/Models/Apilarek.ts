@@ -1,11 +1,11 @@
-import { IOrder, IApi , IProductResponse , IOrderResult, IProduct } from '../../types';
+import { IOrder, IApi , IProductResponse , IOrderResult } from '../../types';
 
 export class Apilarek {
     constructor(private readonly api: IApi) {}
 
-    async getProducts(): Promise<IProduct[]>{
-        const response: IProductResponse = await this.api.get('/product/');
-        return response.items;
+    async getProducts(): Promise<IProductResponse>{
+        const response = await this.api.get<IProductResponse>('/product/');
+        return response;
     }
 
     async sendOrder(orderData: IOrder): Promise<IOrderResult> {

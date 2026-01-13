@@ -8,51 +8,63 @@ import { Apilarek } from "./components/Models/Apilarek.ts";
 import { Api } from "./components/base/Api.ts";
 
 
-const Basket1 = new Basket();
-const Buyer1 = new Buyer();
+const basket = new Basket();
+const buyer = new Buyer();
+const catalog = new Catalog();
+catalog.setItems(apiProducts.items);
+console.log('Массив товаров из каталога:', catalog.getItems());
+const firstProductId= (apiProducts.items[0].id);
+const foundProduct = catalog.getItemid(firstProductId);
+console.log(`🔍 Найден товар по ID "${firstProductId}":`, foundProduct);
 
-const Catalog1 = new Catalog();
-console.log('Массив товаров из каталога:', Catalog1.getItems());
+const selectedProduct = foundProduct;
+console.log(' Выбранный продукт (selectedProduct):', selectedProduct);
 
+const notFoundProduct = catalog.getItemid('non-existent-id');
+console.log(' Поиск несуществующего ID:', notFoundProduct);
+
+catalog.setPreview(foundProduct);
+const preview = catalog.getPreview();
+console.log('текущий просмотр:', preview?.title || 'нет');
 
 
 const [item1, item2] = apiProducts.items;
-Basket1.add(item1);
-Basket1.add(item2);
-console.log('Товары в корзине:', Basket1.getItems());
-console.log('Количество товаров:', Basket1.getCount());
-console.log('Общая сумма:', Basket1.getTotal());
-console.log('Есть ли товар с id', item1.id, '?', Basket1.hasProduct(item1.id));
-Basket1.remove(item1);
-console.log('После удаления одного товара:', Basket1.getItems());
-Basket1.clear();
-console.log('После очистки:', Basket1.getItems());
+basket.add(item1);
+basket.add(item2);
+console.log('Товары в корзине:', basket.getItems());
+console.log('Количество товаров:', basket.getCount());
+console.log('Общая сумма:', basket.getTotal());
+console.log('Есть ли товар с id', item1.id, '?', basket.hasProduct(item1.id));
+basket.remove(item1);
+console.log('После удаления одного товара:', basket.getItems());
+basket.clear();
+console.log('После очистки:', basket.getItems());
 
-Buyer1.set({
+buyer.set({
     payment: 'cash',
     email: 'ishak@gmail.com',
     phone: '+799943245',
     address: 'ул Пушкина д Колотушкина'
 });
-console.log('данные о покупателе', Buyer1.get());
-const errorBuyer = Buyer1.validate();
+console.log('данные о покупателе', buyer.get());
+const errorBuyer = buyer.validate();
 console.log('должен быть пустой обьект',errorBuyer);
 
-Buyer1.clear();
-console.log(Buyer1.get());
-console.log(Buyer1.validate())
+buyer.clear();
+console.log(buyer.get());
+console.log(buyer.validate())
 
 
-const api = new Api('https://larek-api.nomoreparties.co/api/weblarek');
+const api = new Api(import.meta.env.VITE_API_ORIGIN);
 
 const apiClient = new Apilarek(api);
 
-const Catalog2 = new Catalog();
+const catalog2 = new Catalog();
 
 apiClient.getProducts()
-    .then(items => {
-        Catalog2.setItems(items);
-        console.log('✅ Каталог успешно загружен с сервера:', Catalog2.getItems());
+    .then(response => {
+        catalog2.setItems(response.items);
+        console.log('✅ Каталог успешно загружен с сервера:', catalog2.getItems());
     })
     .catch(error => {
         console.error('❌ Ошибка при загрузке каталога:', error);
