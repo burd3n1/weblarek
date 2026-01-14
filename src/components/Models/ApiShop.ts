@@ -1,6 +1,6 @@
 import { IOrder, IApi , IProductResponse , IOrderResult } from '../../types';
 
-export class Apilarek {
+export class ApiShop {
     constructor(private readonly api: IApi) {}
 
     async getProducts(): Promise<IProductResponse>{

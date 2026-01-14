@@ -4,8 +4,9 @@ import { Basket } from "./components/Models/Basket.ts";
 import { Buyer } from "./components/Models/Buyer.ts";
 import { Catalog } from "./components/Models/Catalog.ts";
 import { apiProducts } from "./utils/data.ts";
-import { Apilarek } from "./components/Models/Apilarek.ts";
+import { ApiShop } from "./components/Models/ApiShop.ts";
 import { Api } from "./components/base/Api.ts";
+import { API_URL } from "./utils/constants.ts";
 
 
 const basket = new Basket();
@@ -55,9 +56,9 @@ console.log(buyer.get());
 console.log(buyer.validate())
 
 
-const api = new Api(import.meta.env.VITE_API_ORIGIN);
+const api = new Api(API_URL);
 
-const apiClient = new Apilarek(api);
+const apiClient = new ApiShop(api);
 
 const catalog2 = new Catalog();
 
