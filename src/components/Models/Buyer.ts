@@ -1,17 +1,37 @@
 import { IBuyer } from "../../types";
+import { IEvents } from '../base/Events.ts'
 
 export class Buyer {
     private _payment:  'card' | 'cash' | null = null;
     private _email: string = '';
     private _phone: string = '';
     private _address: string = '';
+    private events: IEvents;
+
+    constructor(events: IEvents){
+        this.events = events
+    }
 
     // Сохранение данных (частичное обновление)
-    set(data: IBuyer): void {
-        if (data.payment !== undefined) this._payment = data.payment;
-        if (data.email !== undefined) this._email = data.email;
-        if (data.phone !== undefined) this._phone = data.phone;
-        if (data.address !== undefined) this._address = data.address;
+
+    setPayment(payment: 'card' | 'cash' | null): void {
+        this._payment = payment;
+        this.events.emit('buyer:changed', { field: 'payment' })
+    }
+
+    setAddress(address: string): void {
+        this._address = address;
+        this.events.emit('buyer:changed', { field: 'address' })
+    }
+
+    setEmail(email: string): void {
+        this._email = email;
+        this.events.emit('buyer:changed', { field: 'email' })
+    }
+
+    setPhone(phone: string): void {
+        this._phone = phone;
+        this.events.emit('buyer:changed', { field: 'phone' })
     }
 
     // Получение всех данных (даже неполных)
@@ -53,5 +73,6 @@ export class Buyer {
         this._address = '';
         this._email = '';
         this._phone = '';
+        this.events.emit('buyer:changed', { field: 'payment' })
     }
 }

@@ -1,8 +1,20 @@
-import { IProduct } from "../../types";
+import {IProduct, IProductResponse} from "../../types";
+import { IEvents } from '../base/Events.ts'
 
 export class Catalog {
     private items: IProduct[] = [];
     private _preview: IProduct | null = null;
+    private events: IEvents;
+
+    constructor(events: IEvents){
+        this.events = events
+    }
+
+    updateItemList(items: IProductResponse): void {
+        this.items = items.slice()
+        this.events.emit<IProduct[]>('catalog:change', this.items.slice())
+    }
+
 
     getItems(): IProduct[] {
         return this.items;
@@ -14,6 +26,11 @@ export class Catalog {
 
     setPreview(product:  IProduct | null) {
         this._preview = product;
+    }
+
+    setSelectedItem(item: IProduct): void {
+        this._preview = item
+        this.events.emit<IProduct>('catalog:item-selected', item)
     }
 
     getPreview(): IProduct | null {

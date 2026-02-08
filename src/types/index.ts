@@ -14,6 +14,8 @@ export interface IProduct {
     price: number | null;
 }
 
+
+
 export interface IBuyer {
     payment: 'card' | 'cash' | null;
     email: string;
@@ -22,6 +24,7 @@ export interface IBuyer {
 }
 
 export interface IProductResponse {
+    slice(): IProduct[];
     total: number;
     items: IProduct[];
 }

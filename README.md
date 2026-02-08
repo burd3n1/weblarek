@@ -91,7 +91,7 @@ Presenter - презентер содержит основную логику п
 Конструктор класса не принимает параметров.
 
 Поля класса:  
-`_events: Map<string | RegExp, Set<Function>>)` -  хранит коллекцию подписок на события. Ключи коллекции - названия событий или регулярное выражение, значения - коллекция функций обработчиков, которые будут вызваны при срабатывании события.
+`_events: Map<string | RegExp, Set<Function>>)` - хранит коллекцию подписок на события. Ключи коллекции - названия событий или регулярное выражение, значения - коллекция функций обработчиков, которые будут вызваны при срабатывании события.
 
 Методы класса:  
 `on<T extends object>(event: EventName, callback: (data: T) => void): void` - подписка на событие, принимает название события и функцию обработчик.  
@@ -176,3 +176,198 @@ api - содержит экземпляр HTTP-клиента, реализую�
 Методы класса:
 getProducts - получает список товаров с эндпоинта /product/
 sendOrder - отправляет данные заказа на эндпоинт /order/`
+
+
+### «Слой Представления»
+
+Класс `Header`
+Нужен для отображения шапки и счётчика корзины в шапке
+
+Поля класса:
+counterElement:HTMLElement - счетчик покупок в корзине
+basketButtonElement:HTMLButtonElement - кнопка для открытия корзины
+events:IEvents - ивентлистнер на корзину, отслеживает открытие корзины
+
+Методы класса:
+set counter(value:number):void - нужен для изменения счётчика в корзине
+
+Конструктор:
+constructor(events: IEvents, container:HTMLElement)
+
+
+Класс `Gallery`
+Нужен для отображения каталога каточек товаров
+
+Поля класса:
+catalogElement:HTMLElement[] - массив карточек товаров
+
+Методы класса:
+set catalogElement(elements: HTMLElement[]) - нужен для отображения карточек товаров в каталоге
+
+Конструктор:
+constructor(container: HTMLElement)
+
+
+Класс `Modal`
+Нужен для отображения модальных окон
+
+Поля класса:
+modalContentElement:HTMLElement - модальное окно
+modalButtonElement:HTMLButtonElement - кнопка закрытия модального окна
+event: IEvents ивентлистнер
+
+Методы класса:
+open(content: HTMLElement): void - открытие модального окна
+close(): void - закрытие модального окна
+
+Конструктор:
+constructor(container: HTMLElement, events: IEvents)
+
+
+Класс `Success`
+Нужен для показа модального окна успешной покупки
+
+Поля класса:
+orderTitleElement: HTMLElement - title
+orderButtonElement: HTMLButtonElement - кнопка закрытия
+orderDescription: HTMLElement - description
+
+Методы класса:
+set total(value: number) - нужен для изменения потраченной суммы
+
+Конструктор:
+constructor(container: HTMLElement, events: IEvents)
+
+Класс `Basket`
+
+Поля класса:
+container: HTMLElement
+itemsContainer: HTMLElement
+totalElement: HTMLElement
+orderButtonElement: HTMLButtonElement
+events: IEvents
+
+Методы:
+render(data: { items: HTMLElement[]; total: number }): HTMLElement
+
+Конструктор:
+constructor(container: HTMLElement, events: IEvents)
+
+
+
+Класс `Card`
+Родительский класс карточки
+
+Поля класса:
+price: HTMLElement - цена
+title: HTMLElement - описание
+event: IEvent
+
+Методы Класса:
+renderBase(product: IProduct): void - заполнить карточку данными
+render(product: IProduct): HTMLElement - реализовывает карточку
+
+Конструктор:
+constructor(events: IEvents, template: string)
+
+
+
+Класс `CardCatalog`
+Карточка в каталоге
+
+Поля класса:
+category: HTMLElement - категория
+image: HTMLImageElement - картинка
+
+Методы класса:
+render(product: IProduct): HTMLElement - реализация карточки
+
+Конструктор:
+constructor(events: IEvents, onClick: () => void)
+
+
+Класс `CardPreview`
+Карточка в модальном окне
+
+
+Поля класса:
+category: HTMLElement - категория
+image: HTMLImageElement - картинка
+description: HTMLElement - описание
+cardButtonElement: HTMLButtonElement - кнопка карточки
+
+Методы класса:
+render(product: IProduct): HTMLElement - реализовать карточку
+setButtonText(text: string): void - изменить текст в кнопке
+setButtonDisabled(disabled: boolean): void - удалить карточку
+
+Конструктор:
+constructor(events: IEvents, onButtonClick: () => void)
+
+
+
+Класс `CardBasket`
+Карточка в корзине
+
+Поля класса:
+cardIndexElement: HTMLElement - номер карточки
+cardButtonRemoveElement: HTMLButtonElement - удалить карточку из корзины
+
+
+Методы класса:
+render(product: IProduct & { index?: number }): HTMLElement - реализовать карточку относительно её номера
+
+Конструктор:
+constructor(events: IEvents, onRemoveClick: () => void)
+
+
+
+Класс `Form`
+Родительский класс формы регистрации
+
+Поля класса:
+formSubmitButtonElement: HTMLButtonElement - submit кнопка 
+formErrorsElement: HTMLElement - Error сообщение
+events: IEvents
+
+
+Методы класса:
+setErrors(message: string): void - сообщение об ошибки
+setSubmitEnabled(enabled: boolean): void - валидация
+onSubmit(): void - если всё правильно идём дальше 
+
+
+Конструктор:
+constructor(container: HTMLElement, events: IEvents)
+
+
+
+Класс `PaymentForm`
+Форма оплаты и адреса
+
+Поля класса:
+formAddressInputElement: HTMLInputElement - поле для адреса 
+formOnlinePayButtonElement: HTMLButtonElement - кнопка онлайн оплаты 
+formCashPayButtonElement: HTMLButtonElement - кнопка оплаты наличкой
+
+Методы класса:
+setAddress(value: string): void - передаёт информацию из поле
+togglePaymentButtonStatus(value: TPayment): void - реализует способы оплаты
+onSubmit(): void - реализует логику отправки формы
+
+Конструктор:
+constructor(container: HTMLElement, events: IEvents)
+
+
+Класс `ContactForm`
+Форма ввода личных данных
+
+
+Поля класса:
+emailInputElement: HTMLInputElement - поле ввода email
+phoneInputElement: HTMLInputElement - поле ввода телефона
+
+Методы Класса:
+setEmail(value: string): void - передаёт информацию из поле
+setPhone(value: string): void - передаёт информацию из поле
+onSubmit(): void - реализует логику отправки формы
