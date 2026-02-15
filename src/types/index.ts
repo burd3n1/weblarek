@@ -24,7 +24,6 @@ export interface IBuyer {
 }
 
 export interface IProductResponse {
-    slice(): IProduct[];
     total: number;
     items: IProduct[];
 }
@@ -38,3 +37,14 @@ export interface IOrderResult {
     id: string;
     total: number;
 }
+
+export type ICardImage = {
+    src: string;
+    alt: string;
+}
+
+export type ICardAction = {
+    onClick: () => void;
+}
+
+export type ICardPreview = Omit<IProduct, 'image'> & {image: ICardImage} & {buttonText?: string};

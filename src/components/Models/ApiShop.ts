@@ -4,8 +4,7 @@ export class ApiShop {
     constructor(private readonly api: IApi) {}
 
     async getProducts(): Promise<IProductResponse>{
-        const response = await this.api.get<IProductResponse>('/product/');
-        return response;
+        return await this.api.get<IProductResponse>('/product/');
     }
 
     async sendOrder(orderData: IOrder): Promise<IOrderResult> {

@@ -1,29 +1,32 @@
 import { Card } from "./Card";
-import { IProduct } from "../../../types";
-import { IEvents } from "../../base/Events";
+import {ICardImage, IProduct, ICardAction} from "../../../types";
 import { ensureElement } from "../../../utils/utils";
 import { categoryMap, CDN_URL } from "../../../utils/constants";
 
-export class CardCatalog extends Card {
-    protected category: HTMLElement;
-    protected image: HTMLImageElement;
 
-    constructor(protected events: IEvents, onClick: () => void) {
-        super(events, "#card-catalog");
+export type TCardCatalog = Pick<IProduct, 'category'> & {image: ICardImage};
 
-        this.category = ensureElement<HTMLElement>(".card__category", this.container);
-        this.image = ensureElement<HTMLImageElement>(".card__image", this.container);
+export class CardCatalog extends Card<TCardCatalog> {
+    protected categoryEl: HTMLElement;
+    protected imageEl: HTMLImageElement;
 
-        this.container.addEventListener("click", onClick);
+    constructor(container: HTMLElement, actions?: ICardAction) {
+        super(container);
+
+        this.categoryEl = ensureElement<HTMLElement>('.card__category', this.container);
+        this.imageEl = ensureElement<HTMLImageElement>('.card__image', this.container)
+
+        if (actions?.onClick) {
+            this.container.addEventListener('click', actions.onClick)
+        }
     }
 
-    render(product: IProduct): HTMLElement {
-        this.renderBase(product);
+    set category(value: keyof typeof categoryMap) {
+        this.categoryEl.classList.add(categoryMap[value]);
+        this.categoryEl.textContent = value;
+    }
 
-        this.category.className = `card__category ${categoryMap[product.category as keyof typeof categoryMap]}`;
-        this.category.textContent = product.category;
-        this.setImage(this.image, `${CDN_URL}/${product.image}`, product.title);
-
-        return this.container;
+    set image(value: { src: string; alt: string }) { // ← должно быть объектом!
+        this.setImage(this.imageEl, CDN_URL + value.src, value.alt);
     }
 }

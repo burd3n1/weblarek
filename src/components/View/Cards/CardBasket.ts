@@ -1,23 +1,28 @@
-import { IProduct } from "../../../types";
-import { ensureElement } from "../../../utils/utils";
-import { IEvents } from "../../base/Events";
-import { Card } from "./Card";
+import {ensureElement} from "../../../utils/utils.ts";
+import {IProduct} from "../../../types";
+import {Card} from "./Card.ts";
 
-export class CardBasket extends Card {
-    protected cardIndexElement: HTMLElement
-    protected cardButtonRemoveElement: HTMLButtonElement
+export type TCardBasket = Pick<IProduct, 'title' | 'price'> & {index: number};
+type CardAction = {
+    onClick: () => void;
+}
 
-    constructor(protected events: IEvents, onRemoveClick: () => void) {
-        super(events, "#card-basket");
+export class CardBasket extends Card<TCardBasket> {
+    private deleteButtonEl: HTMLButtonElement;
+    private indexEl: HTMLElement;
 
-        this.cardIndexElement = ensureElement<HTMLElement>(".basket__item-index", this.container);
-        this.cardButtonRemoveElement = ensureElement<HTMLButtonElement>(".basket__item-delete", this.container);
-        this.cardButtonRemoveElement.addEventListener("click", onRemoveClick);
+    constructor(container: HTMLElement, actions?: CardAction) {
+        super(container);
+
+        this.indexEl = ensureElement<HTMLElement>('.basket__item-index', this.container);
+        this.deleteButtonEl = ensureElement<HTMLButtonElement>('.basket__item-delete', this.container)
+
+        if (actions?.onClick) {
+            this.deleteButtonEl.addEventListener('click', actions.onClick);
+        }
     }
 
-    render(product: IProduct & { index?: number }): HTMLElement {
-        this.renderBase(product);
-        this.cardIndexElement.textContent = String((product.index || 0) + 1);
-        return this.container;
+    set index(value: number) {
+        this.indexEl.textContent = value.toString();
     }
 }

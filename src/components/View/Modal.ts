@@ -2,6 +2,8 @@ import { Component } from "../base/Component.ts";
 import { ensureElement } from "../../utils/utils.ts";
 import { IEvents } from "../base/Events.ts";
 
+
+
 export class Modal extends Component<HTMLElement> {
     protected modalContentElement:HTMLElement
     protected modalButtonElement:HTMLButtonElement
@@ -9,7 +11,7 @@ export class Modal extends Component<HTMLElement> {
     constructor(container:HTMLElement, protected events:IEvents) {
         super(container);
 
-        this.modalContentElement = ensureElement<HTMLElement>('.modal-content', this.container);
+        this.modalContentElement = ensureElement<HTMLElement>('.modal__content', this.container);
         this.modalButtonElement = ensureElement<HTMLButtonElement>('.modal__close', this.container);
 
         this.modalButtonElement.addEventListener('click', () => {

@@ -19,3 +19,37 @@ export const categoryMap = {
 export const settings = {
 };
 
+export const API_ENDPOINTS = {
+  PRODUCTS: '/product/',
+  ORDER: '/order/'
+}
+
+export const paymentMethods: { [key: string]: string } = {
+  'card': 'online',
+  'cash': 'offline'
+}
+
+export const Events  = {
+  /*Model*/
+  CATALOG_CHANGED: 'catalog:changed',
+  CATALOG_CHANGED_SELECTED: 'catalog:changedSelected',
+  BASKET_CHANGED: 'basket:changed',
+  CUSTOMER_CHANGED: 'customer:changed',
+
+  /*View*/
+  BASKET_OPEN: 'basket:open',
+  BASKET_ADD_ITEM: 'basket:addItem',
+  BASKET_REMOVE_ITEM: 'basket:removeItem',
+
+  CARD_OPEN: 'card:select',
+
+  FORM_CHANGE: 'form:change',
+
+  ORDER_CHECKOUT: 'order:checkout',
+  ORDER_PROCEED: 'order:proceed',
+  ORDER_PAY: 'order:pay',
+  ORDER_SUCCESS: 'order:success'
+}
+
+export const CURRENCY = 'синапсов';
+

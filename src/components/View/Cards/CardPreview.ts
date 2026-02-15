@@ -1,42 +1,61 @@
 import { ensureElement } from "../../../utils/utils";
-import { IEvents } from "../../base/Events";
 import { Card } from "./Card";
-import { IProduct } from "../../../types";
+import {ICardAction, ICardImage, ICardPreview} from "../../../types";
 import { categoryMap, CDN_URL } from "../../../utils/constants";
 
-export class CardPreview extends Card {
-    protected category: HTMLElement;
-    protected image: HTMLImageElement;
-    protected description: HTMLElement;
-    protected cardButtonElement: HTMLButtonElement;
+export class CardPreview extends Card<ICardPreview> {
+    private descriptionEl: HTMLElement;
+    private buttonEl: HTMLButtonElement;
+    protected categoryEl: HTMLElement;
+    protected imageEl: HTMLImageElement;
 
-    constructor(protected events: IEvents, onButtonClick: () => void) {
-        super(events, "#card-preview");
+    constructor(container: HTMLElement, actions?: ICardAction) {
+        super(container);
 
-        this.image = ensureElement<HTMLImageElement>(".card__image", this.container);
-        this.category = ensureElement<HTMLElement>(".card__category", this.container);
-        this.description = ensureElement<HTMLElement>(".card__text", this.container);
-        this.cardButtonElement = ensureElement<HTMLButtonElement>(".card__button", this.container);
+        this.descriptionEl = ensureElement<HTMLElement>('.card__text', this.container);
+        this.buttonEl = ensureElement<HTMLButtonElement>('.card__button', this.container);
+        this.categoryEl = ensureElement<HTMLElement>('.card__category', this.container);
+        this.imageEl = ensureElement<HTMLImageElement>('.card__image', this.container)
 
-        this.cardButtonElement.addEventListener("click", onButtonClick);
+        if (actions?.onClick) {
+            this.buttonEl.addEventListener('click', actions.onClick);
+        }
     }
 
-    render(product: IProduct): HTMLElement {
-        this.renderBase(product);
 
-        this.category.className = `card__category ${categoryMap[product.category as keyof typeof categoryMap]}`;
-        this.category.textContent = product.category;
-        this.setImage(this.image, `${CDN_URL}/${product.image}`, product.title);
-
-        this.description.textContent = product.description;
-        return this.container;
+    disableButton() {
+        this.buttonEl.setAttribute('disabled', 'disabled');
     }
 
-    setButtonText(text: string): void {
-        this.cardButtonElement.textContent = text;
+    set description(value: string) {
+        this.descriptionEl.textContent = value;
     }
 
-    setButtonDisabled(disabled: boolean): void {
-        this.cardButtonElement.disabled = disabled;
+    set buttonText(value: string) {
+        this.buttonEl.textContent = value;
+    }
+
+    set category(value: keyof typeof categoryMap) {
+        //Не стала здесь править, тк ошибка в темплейтах, там не должно быть предустановленных классов конкретных категорий
+        this.categoryEl.classList.add(categoryMap[value]);
+        this.categoryEl.textContent = value;
+    }
+
+    set image(value: ICardImage) {
+        this.setImage(this.imageEl, CDN_URL + value.src, value.alt);
+    }
+
+    setButtonText(text: string): this {
+        this.buttonText = text;
+        return this;
+    }
+
+    setButtonDisabled(disabled: boolean): this {
+        if (disabled) {
+            this.buttonEl.setAttribute('disabled', 'disabled');
+        } else {
+            this.buttonEl.removeAttribute('disabled');
+        }
+        return this;
     }
 }

@@ -10,9 +10,9 @@ export class Catalog {
         this.events = events
     }
 
-    updateItemList(items: IProductResponse): void {
-        this.items = items.slice()
-        this.events.emit<IProduct[]>('catalog:change', this.items.slice())
+    updateItemList(response: IProductResponse): void {
+        this.items = [...response.items];
+        this.events.emit('catalog:change', this.items);
     }
 
 

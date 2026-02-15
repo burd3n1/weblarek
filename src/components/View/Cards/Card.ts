@@ -1,22 +1,29 @@
-import { Component } from "../../base/Component";
-import { IEvents } from "../../base/Events";
-import { IProduct } from "../../../types";
-import { cloneTemplate, ensureElement } from "../../../utils/utils";
+import {Component} from "../../base/Component.ts";
+import {ensureElement} from "../../../utils/utils.ts";
+import {IProduct} from "../../../types";
 
-export abstract class Card extends Component<IProduct> {
-    protected price: HTMLElement;
-    protected title: HTMLElement;
+type TCard = Pick<IProduct, 'title' | 'price'>;
 
-    constructor(protected events: IEvents, template: string) {
-        super(cloneTemplate<HTMLElement>(template));
-        this.price = ensureElement<HTMLElement>(".card__price", this.container);
-        this.title = ensureElement<HTMLElement>(".card__title", this.container);
+export abstract class Card<T> extends Component<T & TCard> {
+    protected titleEl: HTMLHeadingElement;
+    protected priceEl: HTMLElement;
+
+    constructor(container: HTMLElement) {
+        super(container);
+
+        this.titleEl = ensureElement<HTMLHeadingElement>('.card__title', this.container);
+        this.priceEl = ensureElement<HTMLElement>('.card__price', this.container);
     }
 
-    protected renderBase(product: IProduct): void {
-        this.title.textContent = product.title;
-        this.price.textContent = product.price ? `${product.price} синапсов` : "Бесценно";
+    getContainer(): HTMLElement {
+        return this.container;
     }
 
-    abstract render(product: IProduct): HTMLElement;
+    set title(value: string) {
+        this.titleEl.textContent = value;
+    }
+
+    set price(value: number) {
+        this.priceEl.textContent = value ? `${value} синапсов` : 'Бесценно';
+    }
 }

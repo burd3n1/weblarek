@@ -273,6 +273,7 @@ constructor(events: IEvents, template: string)
 
 
 Класс `CardCatalog`
+Дочерний класс `Card`
 Карточка в каталоге
 
 Поля класса:
@@ -287,6 +288,7 @@ constructor(events: IEvents, onClick: () => void)
 
 
 Класс `CardPreview`
+Дочерний класс `Card`
 Карточка в модальном окне
 
 
@@ -307,6 +309,7 @@ constructor(events: IEvents, onButtonClick: () => void)
 
 
 Класс `CardBasket`
+Дочерний класс `Card`
 Карточка в корзине
 
 Поля класса:
@@ -343,6 +346,7 @@ constructor(container: HTMLElement, events: IEvents)
 
 
 Класс `PaymentForm`
+Дочерний класс `Form`
 Форма оплаты и адреса
 
 Поля класса:
@@ -360,6 +364,7 @@ constructor(container: HTMLElement, events: IEvents)
 
 
 Класс `ContactForm`
+Дочерний класс `Form`
 Форма ввода личных данных
 
 
