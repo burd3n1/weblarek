@@ -11,19 +11,19 @@ export class BasketC {
 
     add(product: IProduct) {
         this.items.push(product);
-        this.events.emit<IProduct[]>('cart:change', this.items.slice())
+        this.events.emit<IProduct[]>('cart:change')
 
 
     }
 
     remove(product: IProduct) {
         this.items = this.items.filter(item => item !== product);
-        this.events.emit<IProduct[]>('cart:change', this.items.slice())
+        this.events.emit<IProduct[]>('cart:change')
     }
 
     clear() {
         this.items = [];
-        this.events.emit<IProduct[]>('cart:change', this.items.slice())
+        this.events.emit<IProduct[]>('cart:change')
     }
 
     getTotal(): number {

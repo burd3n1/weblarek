@@ -71,6 +71,16 @@ const basket = new Basket(cloneTemplate(basketTemplate), events);
 const orderForm = new PaymentForm(cloneTemplate(orderFormTemplate), events);
 const contactsForm = new ContactForm(cloneTemplate(contactsFormTemplate), events);
 const success = new Success(cloneTemplate(successTemplate), events);
+const preview = new CardPreview(cloneTemplate(cardPreviewTemplate), {
+        onClick: () => {
+            if (basketC.hasProduct(catalog.getPreview()!.id)) {
+                basketC.remove(catalog.getPreview()!);
+            } else {
+                basketC.add(catalog.getPreview()!);
+            }
+            modal.close();
+        }
+    });
 
 
 communication.getProducts().then((response) => {
@@ -98,17 +108,6 @@ events.on('product:select', (product: IProduct) => {
 
 
 events.on('catalog:item-selected', (product: IProduct) => {
-    const container = cloneTemplate(cardPreviewTemplate);
-    const preview = new CardPreview(container, {
-        onClick: () => {
-            if (basketC.hasProduct(product.id)) {
-                basketC.remove(product);
-            } else {
-                basketC.add(product);
-            }
-            modal.close();
-        }
-    });
 
     const previewData: ICardPreview = {
         ...product,
@@ -145,7 +144,7 @@ events.on('cart:change', () => {
         const card = new CardBasket(container, {
             onClick: () => basketC.remove(product)
         });
-        return card.render(toCardBasketData(product, index));
+        return card.render(toCardBasketData(product, index+1));
     });
 
     basket.render({ items, total: basketC.getTotal() });
@@ -164,8 +163,8 @@ events.on('basket:order', () => {
     modal.open(orderForm.render());
 });
 
-events.on('payment:change', (data: { _payment: 'card' | 'cash' }) => {
-    buyer.setPayment(data._payment);
+events.on('payment:change', (data: { payment: 'card' | 'cash' }) => {
+    buyer.setPayment(data.payment);
 });
 
 events.on('address:change', (data: { address: string }) => {
