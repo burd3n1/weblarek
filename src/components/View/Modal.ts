@@ -36,6 +36,5 @@ export class Modal extends Component<HTMLElement> {
 
     close() {
         this.container.classList.remove('modal_active')
-        this.events.emit('modal:close')
     }
 }

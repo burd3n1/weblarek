@@ -18,7 +18,6 @@ export abstract class Form extends Component<HTMLElement> {
 
     setErrors(message: string): void {
         this.formErrorsElement.textContent = message
-        this.formErrorsElement.classList.toggle('form__errors-active', Boolean(message))
     }
 
     setSubmitEnabled(enabled: boolean): void {

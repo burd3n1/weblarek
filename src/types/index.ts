@@ -47,4 +47,8 @@ export type ICardAction = {
     onClick: () => void;
 }
 
-export type ICardPreview = Omit<IProduct, 'image'> & {image: ICardImage} & {buttonText?: string};
+export type ICardPreview = Omit<IProduct, 'image'> & {
+    image: ICardImage;
+    buttonText?: string;
+    disabled?: boolean;
+};

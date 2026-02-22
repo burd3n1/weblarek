@@ -12,7 +12,7 @@ export class Catalog {
 
     updateItemList(response: IProductResponse): void {
         this.items = [...response.items];
-        this.events.emit('catalog:change', this.items);
+        this.events.emit('catalog:change');
     }
 
 

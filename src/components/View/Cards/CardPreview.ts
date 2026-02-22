@@ -1,7 +1,8 @@
 import { ensureElement } from "../../../utils/utils";
 import { Card } from "./Card";
-import {ICardAction, ICardImage, ICardPreview} from "../../../types";
+import { ICardImage, ICardPreview} from "../../../types";
 import { categoryMap, CDN_URL } from "../../../utils/constants";
+import { EventEmitter } from "../../base/Events.ts";
 
 export class CardPreview extends Card<ICardPreview> {
     private descriptionEl: HTMLElement;
@@ -9,7 +10,7 @@ export class CardPreview extends Card<ICardPreview> {
     protected categoryEl: HTMLElement;
     protected imageEl: HTMLImageElement;
 
-    constructor(container: HTMLElement, actions?: ICardAction) {
+    constructor(container: HTMLElement, protected events: EventEmitter) {
         super(container);
 
         this.descriptionEl = ensureElement<HTMLElement>('.card__text', this.container);
@@ -17,45 +18,40 @@ export class CardPreview extends Card<ICardPreview> {
         this.categoryEl = ensureElement<HTMLElement>('.card__category', this.container);
         this.imageEl = ensureElement<HTMLImageElement>('.card__image', this.container)
 
-        if (actions?.onClick) {
-            this.buttonEl.addEventListener('click', actions.onClick);
-        }
+        this.buttonEl.addEventListener('click', () => {
+            this.events.emit('cardPreview:click');
+        });
     }
 
 
-    disableButton() {
-        this.buttonEl.setAttribute('disabled', 'disabled');
-    }
+
 
     set description(value: string) {
         this.descriptionEl.textContent = value;
     }
 
+
     set buttonText(value: string) {
         this.buttonEl.textContent = value;
     }
 
+
     set category(value: keyof typeof categoryMap) {
-        //Не стала здесь править, тк ошибка в темплейтах, там не должно быть предустановленных классов конкретных категорий
         this.categoryEl.classList.add(categoryMap[value]);
         this.categoryEl.textContent = value;
     }
+
 
     set image(value: ICardImage) {
         this.setImage(this.imageEl, CDN_URL + value.src, value.alt);
     }
 
-    setButtonText(text: string): this {
-        this.buttonText = text;
-        return this;
-    }
 
-    setButtonDisabled(disabled: boolean): this {
-        if (disabled) {
+    set disabled(value: boolean) {
+        if (value) {
             this.buttonEl.setAttribute('disabled', 'disabled');
         } else {
             this.buttonEl.removeAttribute('disabled');
         }
-        return this;
     }
 }

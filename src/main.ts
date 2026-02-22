@@ -2,7 +2,7 @@ import './scss/styles.scss';
 
 import { Api } from './components/base/Api';
 import { EventEmitter } from './components/base/Events';
-import {ICardPreview, IOrder} from './types';
+import {IOrder} from './types';
 
 import { Catalog } from './components/Models/Catalog';
 import { BasketC } from './components/Models/BasketC';
@@ -71,16 +71,18 @@ const basket = new Basket(cloneTemplate(basketTemplate), events);
 const orderForm = new PaymentForm(cloneTemplate(orderFormTemplate), events);
 const contactsForm = new ContactForm(cloneTemplate(contactsFormTemplate), events);
 const success = new Success(cloneTemplate(successTemplate), events);
-const preview = new CardPreview(cloneTemplate(cardPreviewTemplate), {
-        onClick: () => {
-            if (basketC.hasProduct(catalog.getPreview()!.id)) {
-                basketC.remove(catalog.getPreview()!);
-            } else {
-                basketC.add(catalog.getPreview()!);
-            }
-            modal.close();
-        }
-    });
+const preview = new CardPreview(cloneTemplate(cardPreviewTemplate), events);
+       events.on('cardPreview:click', () => {
+           const product = catalog.getPreview();
+           if (!product) return;
+
+           if (basketC.hasProduct(product.id)) {
+               basketC.remove(product);
+           } else {
+               basketC.add(product);
+           }
+           modal.close();
+               });
 
 
 communication.getProducts().then((response) => {
@@ -103,33 +105,25 @@ events.on('catalog:change', () => {
 // === Выбор товара ===
 events.on('product:select', (product: IProduct) => {
     catalog.setSelectedItem(product);
-    events.emit('catalog:item-selected', product);
 });
 
 
 events.on('catalog:item-selected', (product: IProduct) => {
+    const isInBasket = basketC.hasProduct(product.id);
+    const isUnavailable = product.price === null;
 
-    const previewData: ICardPreview = {
+    preview.render({
         ...product,
         image: { src: product.image, alt: product.title },
-        buttonText: undefined,
-    };
 
+        buttonText: isUnavailable
+            ? 'Недоступно'
+            : (isInBasket ? 'Удалить из корзины' : 'Купить'),
 
-    preview.render(previewData);
+        disabled: isUnavailable,
+    });
 
-    if (product.price === null) {
-        preview.setButtonText('Недоступно').setButtonDisabled(true);
-    } else {
-        preview.setButtonDisabled(false);
-        if (basketC.hasProduct(product.id)) {
-            preview.setButtonText('Удалить из корзины');
-        } else {
-            preview.setButtonText('Купить');
-        }
-    }
-
-    modal.open(preview.getContainer());
+    modal.open(preview.render());
 });
 
 

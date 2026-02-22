@@ -15,9 +15,6 @@ export abstract class Card<T> extends Component<T & TCard> {
         this.priceEl = ensureElement<HTMLElement>('.card__price', this.container);
     }
 
-    getContainer(): HTMLElement {
-        return this.container;
-    }
 
     set title(value: string) {
         this.titleEl.textContent = value;
